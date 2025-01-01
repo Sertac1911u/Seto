@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seto", "Seto\Seto.csproj", "{A7AFB55B-2222-4D57-B9A5-ABB965DADBE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetoAdmin", "SetoAdmin\SetoAdmin.csproj", "{30001831-E031-493C-9182-BCC70E439FC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetoApi", "SetoApi\SetoApi.csproj", "{A5D72B4C-62DB-402C-AFF7-9BBAD747B463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetoClass", "SetoClass\SetoClass.csproj", "{106C56B8-3934-4857-B8C6-4876BB5B7190}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A7AFB55B-2222-4D57-B9A5-ABB965DADBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7AFB55B-2222-4D57-B9A5-ABB965DADBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7AFB55B-2222-4D57-B9A5-ABB965DADBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7AFB55B-2222-4D57-B9A5-ABB965DADBE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30001831-E031-493C-9182-BCC70E439FC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30001831-E031-493C-9182-BCC70E439FC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30001831-E031-493C-9182-BCC70E439FC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30001831-E031-493C-9182-BCC70E439FC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5D72B4C-62DB-402C-AFF7-9BBAD747B463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5D72B4C-62DB-402C-AFF7-9BBAD747B463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5D72B4C-62DB-402C-AFF7-9BBAD747B463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5D72B4C-62DB-402C-AFF7-9BBAD747B463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{106C56B8-3934-4857-B8C6-4876BB5B7190}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{106C56B8-3934-4857-B8C6-4876BB5B7190}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{106C56B8-3934-4857-B8C6-4876BB5B7190}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{106C56B8-3934-4857-B8C6-4876BB5B7190}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

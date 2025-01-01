@@ -1,0 +1,6 @@
+@SetoApi_HostAddress = http://localhost:5193
+
+GET {{SetoApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

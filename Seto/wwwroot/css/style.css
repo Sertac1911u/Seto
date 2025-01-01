@@ -1,0 +1,761 @@
+/* Genel Ayarlar */
+:root {
+    --background-light: #F4F4F4;
+    --background-dark: #222831;
+    --text-light: #EAEAEA;
+    --text-dark: #1B1B1B;
+    --transition-speed: 0.3s;
+}
+
+* {
+    user-select: none; /* burayı kaldırabilirim emin degilim */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
+body {
+    animation: fadeIn 600ms linear;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Navbar */
+
+
+.navbar {
+    background-color: var(--primary-color);
+    padding: 15px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    transition: background-color var(--transition-speed);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+    margin-right: 15px; /* Logo ve gece modu ikonu arasında boşluk */
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-link {
+    position: relative;
+    padding: 5px 0;
+    color: #fff;
+    transition: color var(--transition-speed);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: #fff;
+    left: 0;
+    bottom: 0;
+    transition: width var(--transition-speed);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Active Nav Link için Kalıcı Çizgi */
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-link.active {
+    font-weight: 600;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Mevcut Stil Kurallarının Üstünde Değişiklikler Olmaması İçin */
+.dark-mode-toggle, .login-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: .25rem;
+    font-size: 1.1rem;
+    color: #fff;
+    transition: font-weight var(--transition-speed);
+    position: relative; /* Ripple efekti için */
+    overflow: hidden; /* Ripple efektinin taşmaması için */
+}
+
+.dark-mode-toggle, .login-btn i{
+    margin-left: .4rem;
+}
+
+/* Hover Durumunda Sadece Font Ağırlığını Artır */
+.dark-mode-toggle:hover, .login-btn:hover {
+    opacity: .6;
+}
+
+
+
+.navbar .nav-right .profile-img img {
+    margin-top: 10px;
+    width: 30px;
+    border-radius: 50%;
+}
+
+/* Popup Stilleri */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.popup-overlay.active {
+    display: flex;
+}
+
+.popup {
+    position: relative; /* Kapatma butonunun doğru konumlanması için eklendi */
+    max-width: 400px;
+    width: 90%;
+    background: var(--background-light);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: background-color var(--transition-speed);
+}
+
+.popup-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.popup-content {
+    padding: 20px;
+}
+
+.popup-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-group input, 
+.form-group textarea {
+    padding-right: 40px; /* Göz ikonu için yeterli boşluk */
+}
+
+.form-group .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 70%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.forgot-password {
+    display: block;
+    text-align: right;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+#switchToRegister, #switchToLogin {
+    color: var(--primary-color);
+    background: none;
+    border: none;
+    padding: 0 5px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.popup-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--secondary-color);
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-link {
+    flex: 1;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+    border-radius: 4px;
+}
+
+.tab-link.active, .tab-link:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Form Stilleri */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px; /* Göz ikonu için yeterli boşluk */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color var(--transition-speed);
+}
+
+.form-group input:focus, 
+.form-group textarea:focus {
+    border-color: var(--primary-color);
+}
+
+.btn {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Last Blog Section */
+.last-blog {
+    padding: 120px 0 60px 0; /* Navbar yüksekliğini dikkate alarak padding */
+}
+
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.last-blog-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%; /* Genişliği tam yap */
+}
+
+.large-blog {
+    flex: 1 1 65%; /* Genişlik oranı */
+    background-color: var(--background-light);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background-color var(--transition-speed);
+}
+
+.large-blog .blog-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.large-blog .blog-content {
+    padding: 15px;
+}
+
+.large-blog .blog-title a {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    transition: color var(--transition-speed);
+}
+
+.large-blog .blog-title a:hover {
+    color: #0056b3;
+}
+
+.blog-meta {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    margin: 10px 0;
+}
+
+.blog-excerpt {
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.blog-actions {
+    display: flex;
+    gap: 30px;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.blog-actions i {
+    margin-right: 5px;
+}
+
+.blog-actions span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.blog-actions span:hover {
+    color: var(--primary-color);
+}
+
+/* Yeni Kaydetme Sayısı Stilleri */
+.blog-saves {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.blog-saves:hover {
+    color: var(--primary-color);
+}
+
+/* Küçük Blog Yazıları */
+.small-blogs {
+    display: flex;
+    flex: 1 1 30%; /* Genişlik oranı */
+    gap: 20px;
+    width: 100%; /* Flex konteyneri için tam genişlik */
+}
+
+.small-blog {
+    flex: 1 1 100%;
+    background-color: var(--background-light);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background-color var(--transition-speed);
+}
+
+.small-blog .blog-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.small-blog .blog-content {
+    padding: 10px;
+}
+
+.small-blog .blog-title a {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    transition: color var(--transition-speed);
+}
+
+.small-blog .blog-title a:hover {
+    color: #0056b3;
+}
+
+.small-blog .blog-meta {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    margin: 5px 0;
+}
+
+/* Videos Section */
+.videos-section {
+    padding: 60px 0 80px 0; /* Navbar yüksekliğini dikkate alarak padding */
+}
+
+.videos-section .section-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.horizontal-scroll-wrapper {
+    position: relative;
+    overflow: hidden;
+    padding: 0; /* Padding kaldırıldı */
+}
+
+.videos-grid {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 20px 0;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.videos-grid::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.video-item {
+    width: 300px; /* Boyut küçültüldü */
+    flex: 0 0 auto;
+    background-color: var(--background-light);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background-color var(--transition-speed);
+}
+
+.video-thumbnail {
+    position: relative;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.video-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity var(--transition-speed);
+}
+
+.video-item:hover .video-hover {
+    opacity: 1;
+}
+
+.video-hover i {
+    color: #fff;
+    font-size: 2rem;
+}
+
+.video-hover .watch-now {
+    color: #fff;
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+.video-content {
+    padding: 15px;
+}
+
+.video-title a {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    transition: color var(--transition-speed);
+}
+
+.video-title a:hover {
+    color: #0056b3;
+}
+
+.video-meta {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    margin: 10px 0;
+}
+
+.video-stats {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.video-stats i {
+    margin-right: 5px;
+}
+
+.video-stats span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.video-stats span:hover {
+    color: var(--primary-color);
+}
+
+/* Games Section */
+.games-section {
+    padding: 60px 0 80px 0; /* Navbar yüksekliğini dikkate alarak padding */
+}
+
+.games-section .section-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.games-grid {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 20px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.games-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.game-card {
+    min-width: 300px;
+    flex: 0 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.game-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.game-title-overlay {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: opacity 0.3s ease;
+    font-weight: bold;
+}
+
+.game-play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.game-play-overlay i {
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.game-card:hover .game-title-overlay {
+    opacity: 0;
+}
+
+.game-card:hover .game-play-overlay {
+    opacity: 1;
+}
+
+/* Ortak horizontal scroll butonları */
+.horizontal-scroll-wrapper {
+    position: relative;
+    overflow: hidden;
+    padding: 0; /* Padding kaldırıldı */
+}
+
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid #eee;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.scroll-btn.left { left: 10px; }
+.scroll-btn.right { right: 10px; }
+
+.scroll-btn i {
+    color: #333;
+    font-size: 1rem;
+    transition: color var(--transition-speed);
+}
+
+.scroll-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    opacity: 1;
+}
+
+.horizontal-scroll-wrapper:hover .scroll-btn {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 40px 0;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer-left h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.footer-left p {
+    font-size: 0.9rem;
+}
+
+.footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.footer-links {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.footer-links a {
+    color: #fff;
+    transition: color var(--transition-speed);
+}
+
+.footer-links a:hover {
+    color: #000;
+}
+
+.footer-social {
+    display: flex;
+    gap: 10px;
+}
+
+.footer-social a {
+    color: #fff;
+    font-size: 1.2rem;
+    transition: color var(--transition-speed);
+}
+
+.footer-social a:hover {
+    color: #000;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    border: 1px solid #fff;
+    right: 30px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    transition: background-color var(--transition-speed), opacity var(--transition-speed);
+    z-index: 1000;
+}
+
+.scroll-to-top.show {
+    display: flex;
+}
+
+.scroll-to-top:hover {
+    background-color: #0056b3;
+}
+

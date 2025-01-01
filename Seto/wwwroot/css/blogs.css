@@ -1,0 +1,123 @@
+/* blogs.css */
+
+/* Genel Ayarlardan Miras Almak */
+@import url('style.css');
+
+/* Blog List Styling */
+.blogs-page
+{
+    padding: 100px 0 60px 0;
+    background-color: var(--background-page);
+    animation: slideIn 600ms linear;
+}
+.section-title
+{
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: var(--primary-color);
+}
+.blog-list-item {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+    transition: transform var(--transition-speed);
+}
+
+.blog-list-item:hover {
+    transform: translateY(-5px);
+}
+
+.blog-list-img {
+    position: relative; /* Tam ekran butonunu konumlandırmak için */
+    flex: 1;
+}
+
+.blog-list-img img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.fullscreen-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: #fff;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fullscreen-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.fullscreen-btn i {
+    font-size: 1rem;
+}
+
+/* Blog Content Styling */
+.blog-list-content {
+    flex: 2;
+}
+
+.blog-list-title a {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
+
+.blog-list-title a:hover {
+    color: #0056b3;
+}
+
+.blog-list-meta {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.blog-list-meta .blog-author {
+    font-weight: 600;
+}
+.blog-list-meta .blog-author:hover
+{
+    opacity: .7;
+    cursor: pointer;
+}
+.blog-list-desc {
+    font-size: 1rem;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+}
+.blog-list-actions {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+.blog-list-actions span:hover
+{
+    opacity: .4;
+    cursor: pointer;
+}
+.blog-list-actions .blog-likes,
+.blog-list-actions .blog-comments {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.blog-list-actions i {
+    color: var(--primary-color);
+}
+

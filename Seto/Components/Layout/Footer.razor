@@ -1,0 +1,48 @@
+﻿@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@using System.Net.Http.Json
+@using SetoClass.DTOs.Settings
+
+
+<footer class="footer">
+    <div class="container footer-container">
+        <div class="footer-left">
+            @if (settings != null)
+            {
+                <h3>@settings.SiteTitle</h3>
+                <p>@settings.FooterText</p>
+            }
+            else
+            {
+                <h3>Default Site Name</h3>
+                <p>Default Footer Text</p>
+            }
+        </div>
+        <div class="footer-right">
+            <ul class="footer-links">
+                <li><a href="resume">Resume</a></li>
+                <li><a href="blogs">Blog</a></li>
+                <li><a href="videos">Videos</a></li>
+                <li><a href="games">Games</a></li>
+            </ul>
+            <ResumeSocial></ResumeSocial>
+        </div>
+    </div>
+</footer>
+
+@code {
+    private SettingsReadDto? settings;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Verileri API'den çek
+            settings = await Http.GetFromJsonAsync<SettingsReadDto>("api/Settings");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching settings: {ex.Message}");
+        }
+    }
+}

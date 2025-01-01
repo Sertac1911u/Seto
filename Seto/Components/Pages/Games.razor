@@ -1,0 +1,92 @@
+﻿@page "/games"
+@using SetoClass.Models
+@using SetoClass.DTOs.Game
+@inject HttpClient Http
+
+<PageTitle>Games</PageTitle>
+<link href="/css/games.css" rel="stylesheet" />
+
+<div class="games-page">
+    <section class="games-section section">
+        <div class="container">
+            <h2 class="section-title">Latest Games</h2>
+
+            @if (games == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else if (games.Count == 0)
+            {
+                <p><em>No games available.</em></p>
+            }
+            else
+            {
+                <div class="games-grid">
+                    @foreach (var game in games)
+                    {
+                        <article class="game-item">
+                            <div class="game-image">
+                                <a href="@($"/game/{game.Id}")">
+                                    <img src="@game.CoverImageUrl" alt="Game Image" />
+                                    <div class="game-hover">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="game-content">
+                                <h3 class="game-title">
+                                    <a href="@($"/game/{game.Id}")">@game.Title</a>
+                                </h3>
+                                <p class="game-meta">
+                                    by <span class="game-developer">@game.GameAuthor</span> - @FormatDate(game.ReleaseDate)
+                                </p>
+                                <div class="game-stats">
+                                    <span class="game-views"><i class="fas fa-eye"></i> @FormatNumber(game.SaveCount) Views</span>
+                                    <span class="game-saves"><i class="fas fa-save"></i> @FormatNumber(game.LikeCount) Likes</span>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        </div>
+    </section>
+</div>
+
+@code {
+    private List<GameReadDto> games;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            games = await Http.GetFromJsonAsync<List<GameReadDto>>("api/Games");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching games: {ex.Message}");
+            games = new List<GameReadDto>();
+        }
+    }
+
+    private string FormatDate(DateTime date)
+    {
+        var timeSpan = DateTime.UtcNow - date;
+        if (timeSpan.TotalDays >= 365)
+            return $"{Math.Floor(timeSpan.TotalDays / 365)} years ago";
+        if (timeSpan.TotalDays >= 30)
+            return $"{Math.Floor(timeSpan.TotalDays / 30)} months ago";
+        if (timeSpan.TotalDays >= 1)
+            return $"{Math.Floor(timeSpan.TotalDays)} days ago";
+        if (timeSpan.TotalHours >= 1)
+            return $"{Math.Floor(timeSpan.TotalHours)} hours ago";
+        return $"{Math.Floor(timeSpan.TotalMinutes)} minutes ago";
+    }
+
+    private string FormatNumber(int number)
+    {
+        if (number >= 1000)
+            return $"{(number / 1000.0):0.#}k";
+        return number.ToString();
+    }
+}

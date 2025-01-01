@@ -1,0 +1,385 @@
+/* responsive.css */
+
+/* Genel Responsive Ayarlar */
+@media (max-width: 768px) {
+    /* Navbar Responsive Stilleri */
+
+    /* Nav Menü Gizle ve Hamburger Göster */
+    .nav-menu {
+        display: none; /* Menü başlangıçta gizli */
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* Navbar yüksekliğine göre ayarlayın */
+        left: 0;
+        width: 100%;
+        background-color: var(--primary-color);
+        padding: 20px 0;
+        z-index: 999; /* Menü üstte görünür */
+    }
+
+    .hamburger {
+        display: flex; /* Hamburger ikonunu göster */
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+    }
+
+    .hamburger div {
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    /* Nav Menü Açıldığında */
+    .nav-menu.active {
+        display: flex; /* Menü görünür hale gelir */
+        align-items: center;
+    }
+
+    .nav-menu.active .nav-link {
+        padding: 10px 20px;
+        border-top: 1px solid #444;
+        color: #fff; /* Menüdeki linklerin rengi */
+    }
+
+    .nav-menu.active .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Hover arka plan rengi */
+    }
+
+    /* Hamburger Animasyonu */
+    .hamburger.active div:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active div:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active div:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* Ana Sayfa İçeriği Responsive Ayarları */
+    .home-section {
+        padding: 60px 15px 30px 15px;
+    }
+}
+
+/* Ek Responsive Ayarlar (Daha Küçük Ekranlar İçin) */
+@media (max-width: 480px) {
+    .site-name {
+        font-size: 1.2rem;
+    }
+
+    .nav-link {
+        font-size: 1.1rem;
+    }
+
+    .nav-right button {
+        font-size: 0.9rem;
+    }
+
+    /* Hamburger Çubuğu Daha Küçük Ekranlar İçin */
+    .hamburger div {
+        width: 20px;
+        height: 2px;
+    }
+}
+/* Resume Page Start */
+/* Responsive Ayarlar */
+@media (max-width: 768px) {
+    .resume-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-pic img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .name {
+        font-size: 1.8rem;
+    }
+
+    .profession {
+        font-size: 1rem;
+    }
+
+    .skills-list {
+        gap: 10px;
+    }
+
+    .skill-item {
+        padding: 6px 10px;
+    }
+
+    .download-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Resume Page End */
+/* Videos Page Start */
+/* Responsive Ayarlar */
+@media (max-width: 768px) {
+    .video-list-item {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .video-thumbnail {
+        width: 100%;
+    }
+
+    .video-content {
+        width: 100%;
+    }
+
+    .video-title a {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
+    .video-meta {
+        text-align: center;
+    }
+
+    .video-stats {
+        justify-content: center;
+    }
+
+    .fullscreen-btn {
+        top: 5px;
+        right: 5px;
+        padding: 6px;
+    }
+
+    .fullscreen-btn i {
+        font-size: 0.9rem;
+    }
+
+    .watch-now {
+        font-size: 1rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .see-more {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Videos Page End */
+/* Blogs Page Start */
+/* Responsive Ayarlar */
+@media (max-width: 768px) {
+    .blog-list-item {
+        flex-direction: column;
+    }
+
+    .blog-list-img {
+        width: 100%;
+    }
+
+    .fullscreen-btn {
+        top: 5px;
+        right: 5px;
+        padding: 6px;
+    }
+
+    .fullscreen-btn i {
+        font-size: 0.9rem;
+    }
+}
+
+/* Blogs Page End */
+
+/* Games Page Start */
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .games-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .game-title a {
+        font-size: 1rem;
+    }
+
+    .see-more {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    .game-hover i {
+        font-size: 1.5rem;
+    }
+}
+
+/* Games Page End */
+/* Single Blog Page Start */
+
+
+/* Responsive Ayarlar */
+@media (max-width: 768px) {
+    .blog-post-title {
+        font-size: 2rem;
+    }
+
+    .blog-post-content h2 {
+        font-size: 1.75rem;
+    }
+
+    .blog-post-content h3 {
+        font-size: 1.25rem;
+    }
+
+    .comments-section {
+        padding: 15px;
+    }
+
+    .comment-author img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .comment.reply {
+        margin-left: 40px;
+    }
+
+    .action-item {
+        gap: 3px;
+    }
+
+    .action-count {
+        font-size: 0.8rem;
+    }
+
+    .reply-form .comment-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .reply-form .comment-form textarea {
+        width: 100%;
+    }
+
+    .leave-comment .comment-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .leave-comment .comment-form textarea {
+        width: 100%;
+    }
+}
+
+/* Single Blog Page End */
+
+/* Single Video Page Start */
+/* Responsive Ayarlar */
+@media (max-width: 768px) {
+    .video-title {
+        font-size: 1.75rem;
+    }
+
+    .video-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .video-actions i {
+        font-size: 1.2rem;
+    }
+
+    .comments-section {
+        padding: 15px;
+    }
+
+    .comment-author {
+        width: 40px;
+    }
+
+    .comment-author img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .reply-btn {
+        font-size: 0.8rem;
+    }
+
+    .video-description h2 {
+        font-size: 1.5rem;
+    }
+
+    .video-description h3 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Single Video Page End */
+/* Single Game Page Start */
+/* Responsive Ayarlar */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 1.75rem;
+    }
+
+    .game-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .game-actions i {
+        font-size: 1.2rem;
+    }
+
+    .comments-section {
+        padding: 15px;
+    }
+
+    .comment-author {
+        width: 40px;
+    }
+
+    .comment-author img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .reply-btn {
+        font-size: 0.8rem;
+    }
+
+    .game-description h2 {
+        font-size: 1.5rem;
+    }
+
+    .game-description h3 {
+        font-size: 1.2rem;
+    }
+
+    /* Tam Ekran Butonu */
+    .fullscreen-btn {
+        top: 5px;
+        right: 5px;
+        padding: 6px;
+    }
+
+    .fullscreen-btn i {
+        font-size: 0.9rem;
+    }
+}
+
+/* Single Game Page End */

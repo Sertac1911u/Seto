@@ -1,0 +1,151 @@
+﻿@page "/settings"
+@rendermode InteractiveServer
+
+@using SetoClass.DTOs.Settings
+
+
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<LayoutComponentBase>
+    <div class="admin-container">
+        <div class="header-section">
+            <h2 class="page-title">Ayarlar Yönetimi</h2>
+        </div>
+
+        @if (isLoading)
+        {
+            <div class="loading-spinner">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Yükleniyor...</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <EditForm Model="@settings" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-3">
+                    <label class="form-label">Site Başlığı</label>
+                    <InputText class="form-control" @bind-Value="settings.SiteTitle" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Alt Metin</label>
+                    <InputText class="form-control" @bind-Value="settings.FooterText" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Site Açıklaması</label>
+                    <InputTextArea class="form-control" @bind-Value="settings.SiteDescription" style="height: 100px;" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ana Renk</label>
+                    <RadzenColorPicker @bind-Value="settings.PrimaryColor" ShowClearButton="true" Style="width: 100%;" />
+                    <InputText class="form-control mt-2" @bind-Value="settings.PrimaryColor" placeholder="#000000" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">İkinci Renk</label>
+                    <RadzenColorPicker @bind-Value="settings.SecondaryColor" ShowClearButton="true" Style="width: 100%;" />
+                    <InputText class="form-control mt-2" @bind-Value="settings.SecondaryColor" placeholder="#FFFFFF" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Koyu Mod Etkin</label>
+                    <RadzenCheckBox @bind-Value="settings.IsDarkModeEnabled" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Favicon</label>
+                    <InputFile OnChange="HandleFileUpload" accept=".ico,.png" />
+                    @if (!string.IsNullOrEmpty(settings.FaviconPath))
+                    {
+                        <img src="@settings.FaviconPath" alt="Favicon" style="width: 32px; height: 32px; margin-top: 10px;" />
+                    }
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </EditForm>
+        }
+    </div>
+</LayoutComponentBase>
+
+@code {
+    private SettingsReadDto settings = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSettings();
+    }
+
+    private async Task LoadSettings()
+    {
+        isLoading = true;
+        try
+        {
+            settings = await Http.GetFromJsonAsync<SettingsReadDto>("api/Settings") ?? new SettingsReadDto();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await Http.PutAsJsonAsync("api/Settings", settings);
+        if (response.IsSuccessStatusCode)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Ayarlar başarıyla güncellendi.");
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Kaydetme sırasında hata oluştu.");
+        }
+    }
+
+    private async Task HandleFileUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            settings.FaviconPath = await UploadFile(file, "favicons");
+        }
+    }
+
+    private async Task<string> UploadFile(IBrowserFile file, string folder)
+    {
+        try
+        {
+            using var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 2 * 1024 * 1024)); // 2 MB limit
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync($"api/Settings/upload?folder={folder}", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<UploadResult>();
+                return result?.Url ?? string.Empty;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"File upload failed: {ex.Message}");
+        }
+        return string.Empty;
+    }
+
+    public class UploadResult
+    {
+        public string? Url { get; set; }
+    }
+}

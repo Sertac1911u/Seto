@@ -1,0 +1,139 @@
+﻿@page "/game/{Id:int}"
+@using SetoClass.Models
+@using SetoClass.DTOs.Game
+@inject HttpClient Http
+
+<PageTitle>Game Detail</PageTitle>
+<link href="/css/game.css" rel="stylesheet" />
+
+<section class="game-detail section">
+    <div class="container">
+        @if (game == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else if (!gameExists)
+        {
+            <p><em>Game not found.</em></p>
+        }
+        else
+        {
+            <div class="game-player">
+                <!-- Oynanabilir Demo (Iframe ile) -->
+                <iframe src="@game.GameUrl"
+                        width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                <!-- Tam Ekran Butonu -->
+                <button class="fullscreen-btn" onclick="toggleFullscreen()" aria-label="Toggle Fullscreen">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <div class="game-info">
+                <h1 class="game-title">@game.Title</h1>
+                <div class="game-meta">
+                    <span class="game-developer"><i class="fas fa-user-tie"></i> @game.GameAuthor</span>
+                    <span class="game-release-date"><i class="fas fa-calendar-alt"></i> @FormatDate(game.ReleaseDate)</span>
+                    <span class="game-genre"><i class="fas fa-gamepad"></i> @GetGenre(game.Id)</span>
+                </div>
+                <div class="game-actions">
+                    <span class="action-item">
+                        <i class="fas fa-heart like-btn" aria-label="Like"></i>
+                        <span class="action-count">@game.LikeCount</span>
+                    </span>
+                    <span class="action-item">
+                        <i class="fas fa-save save-btn" aria-label="Save"></i>
+                        <span class="action-count">@game.SaveCount</span>
+                    </span>
+                </div>
+                <div class="game-description">
+                    <p>
+                        @game.Description
+                    </p>
+                    <!-- Eğer oyun türleri veya ek bilgiler varsa, bunları dinamik hale getirebilirsiniz -->
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private GameReadDto game;
+    private bool gameExists = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            game = await Http.GetFromJsonAsync<GameReadDto>($"api/Games/{Id}");
+            if (game == null)
+            {
+                gameExists = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching game details: {ex.Message}");
+            gameExists = false;
+        }
+    }
+
+    private string FormatDate(DateTime date)
+    {
+        var timeSpan = DateTime.UtcNow - date;
+        if (timeSpan.TotalDays >= 365)
+            return $"{Math.Floor(timeSpan.TotalDays / 365)} years ago";
+        if (timeSpan.TotalDays >= 30)
+            return $"{Math.Floor(timeSpan.TotalDays / 30)} months ago";
+        if (timeSpan.TotalDays >= 1)
+            return $"{Math.Floor(timeSpan.TotalDays)} days ago";
+        if (timeSpan.TotalHours >= 1)
+            return $"{Math.Floor(timeSpan.TotalHours)} hours ago";
+        return $"{Math.Floor(timeSpan.TotalMinutes)} minutes ago";
+    }
+
+    private string GetGenre(int gameId)
+    {
+        // Eğer oyun türlerini API'den çekiyorsanız, burada ilgili metodu ekleyebilirsiniz.
+        // Şimdilik statik bir değer döndürüyoruz.
+        return "Action-Adventure";
+    }
+
+    private void toggleFullscreen()
+    {
+        // Tam ekran modunu tetiklemek için JavaScript interop kullanabilirsiniz.
+        // Bu örnekte, basit bir alert ile gösteriyoruz.
+        // Gerçek uygulamada JavaScript interop ile tam ekran modunu etkinleştirin.
+        // Bu örneği genişletmek için JavaScript dosyanıza eklemeler yapmanız gerekecek.
+        // Ancak, Blazor'da tam ekran butonunu çalıştırmak için şu adımları takip edebilirsiniz:
+        // 1. wwwroot/index.html veya _Host.cshtml dosyanıza JavaScript kodu ekleyin.
+        // 2. Bu JavaScript fonksiyonunu Blazor'da çağırın.
+
+        // Örnek olarak, aşağıdaki JavaScript kodunu ekleyin:
+
+        // <script>
+        //     function toggleFullscreen() {
+        //         if (!document.fullscreenElement) {
+        //             document.documentElement.requestFullscreen();
+        //         } else {
+        //             if (document.exitFullscreen) {
+        //                 document.exitFullscreen();
+        //             }
+        //         }
+        //     }
+        // </script>
+
+        // Ve Blazor'da bu fonksiyonu çağırmak için aşağıdaki kodu kullanın:
+
+        // [Inject]
+        // IJSRuntime JSRuntime { get; set; }
+
+        // private async Task ToggleFullscreenAsync()
+        // {
+        //     await JSRuntime.InvokeVoidAsync("toggleFullscreen");
+        // }
+
+        // Bu şekilde, butona tıklandığında tam ekran modu tetiklenebilir.
+    }
+}

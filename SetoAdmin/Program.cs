@@ -1,10 +1,35 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Radzen;
 using SetoAdmin.Components;
+using SetoApi.Data;
+using SetoApi.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+
+builder.Services.AddScoped(sp => new HttpClient
+{
+    BaseAddress = new Uri("https://localhost:7278/")
+});
+// b) İsimlendirilmiş HttpClient -> "SetosApi"
+builder.Services.AddHttpClient("SetosApi", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7278/");
+});
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddRadzenComponents();
+// Add services to the container.
+
 
 var app = builder.Build();
 

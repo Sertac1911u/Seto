@@ -1,0 +1,93 @@
+﻿@page "/videos"
+@using SetoClass.Models
+@using SetoClass.DTOs.Video
+@inject HttpClient Http
+
+<PageTitle>Videos</PageTitle>
+<link href="/css/videos.css" rel="stylesheet" />
+
+<div class="videos-page">
+    <section class="all-videos section">
+        <div class="container">
+            <h2 class="section-title">All Videos</h2>
+
+            @if (videos == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else if (videos.Count == 0)
+            {
+                <p><em>No videos available.</em></p>
+            }
+            else
+            {
+                <div class="video-list">
+                    @foreach (var video in videos)
+                    {
+                        <article class="video-list-item">
+                            <div class="video-thumbnail">
+                                <a href="@($"/video/{video.Id}")">
+                                    <img src="@video.CoverImageUrl" alt="Video Thumbnail" />
+                                    <div class="video-hover">
+                                        <i class="fas fa-play"></i>
+                                        <span class="watch-now">Watch Now</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="video-content">
+                                <h3 class="video-title">
+                                    <a href="@($"/video/{video.Id}")">@video.Title</a>
+                                </h3>
+                                <p class="video-meta">
+                                    by <span class="video-author">@video.Author</span> - @FormatDate(video.UploadDate)
+                                </p>
+                                <div class="video-stats">
+                                    <span class="video-views"><i class="fas fa-eye"></i> @FormatNumber(video.Views) Views</span>
+                                    <span class="video-saves"><i class="fas fa-save"></i> @FormatNumber(video.Saves) Saves</span>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+
+            <div class="see-more-wrap">
+                <a href="/" class="see-more">Back to Home</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+@code {
+    private List<VideoReadDto> videos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            videos = await Http.GetFromJsonAsync<List<VideoReadDto>>("api/Videos");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching videos: {ex.Message}");
+            videos = new List<VideoReadDto>();
+        }
+    }
+
+    private string FormatDate(DateTime date)
+    {
+        var timeSpan = DateTime.UtcNow - date;
+        if (timeSpan.TotalMinutes < 60)
+            return $"{Math.Floor(timeSpan.TotalMinutes)} minutes ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{Math.Floor(timeSpan.TotalHours)} hours ago";
+        return $"{Math.Floor(timeSpan.TotalDays)} days ago";
+    }
+
+    private string FormatNumber(int number)
+    {
+        if (number >= 1000)
+            return $"{(number / 1000.0):0.#}k";
+        return number.ToString();
+    }
+}

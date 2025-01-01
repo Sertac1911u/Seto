@@ -1,0 +1,9 @@
+﻿:root {
+    --primary-color: rgb(54, 136, 40);
+    --secondary-color: rgb(0, 0, 0);
+    --background-light: #F4F4F4;
+    --background-dark: #222831;
+    --text-light: #EAEAEA;
+    --text-dark: #1B1B1B;
+    --transition-speed: 0.3s;
+}

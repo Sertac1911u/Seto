@@ -1,0 +1,182 @@
+/* videos.css */
+
+/* Genel Ayarlardan Miras Almak */
+@import url('style.css');
+
+/* Videos Page Styling */
+.videos-page {
+    padding: 100px 0 60px 0; /* Navbar yüksekliğini dikkate alarak */
+    background-color: var(--background-page);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: var(--primary-color);
+}
+
+.video-list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.video-list-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transition: transform var(--transition-speed);
+}
+
+.video-list-item:hover {
+    transform: translateY(-5px);
+}
+
+.video-thumbnail {
+    position: relative; /* Tam ekran butonunu konumlandırmak için */
+    flex: 1;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    object-fit: cover;
+    transition: transform var(--transition-speed);
+}
+
+.video-thumbnail:hover img {
+    transform: scale(1.05);
+}
+
+.video-hover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity var(--transition-speed);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+.video-thumbnail:hover .video-hover {
+    opacity: 1;
+}
+
+.video-hover i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.watch-now {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.fullscreen-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: #fff;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fullscreen-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.fullscreen-btn i {
+    font-size: 1rem;
+}
+
+.video-content {
+    flex: 2;
+}
+
+.video-title a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1.5rem;
+    transition: color var(--transition-speed);
+}
+
+.video-title a:hover {
+    color: #0056b3;
+}
+
+.video-meta {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.video-meta .video-author {
+    font-weight: 600;
+}
+
+.video-stats {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.video-stats .video-views,
+.video-stats .video-comments {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.video-stats i {
+    color: var(--primary-color);
+}
+
+/* See More Button */
+.see-more-wrap {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.see-more {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.see-more:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.see-more i {
+    margin-right: 8px;
+}
+
+
+

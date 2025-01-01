@@ -1,0 +1,405 @@
+﻿@page "/videos"
+@rendermode InteractiveServer
+
+@using SetoClass.DTOs.Video
+@using AutoMapper
+
+@inject IMapper Mapper
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<LayoutComponentBase>
+    <div class="admin-container">
+        <div class="header-section">
+            <h2 class="page-title">Video Yönetimi</h2>
+            <button class="add-video-btn btn btn-primary" @onclick="ToggleAddVideoForm">
+                <i class="fas fa-plus"></i>
+                Yeni Video Ekle
+            </button>
+        </div>
+
+        @if (isLoading)
+        {
+            <div class="loading-spinner">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Yükleniyor...</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            @if (videos.Any())
+            {
+                <div class="table-responsive">
+                    <table class="custom-table table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Başlık</th>
+                                <th>Yazar</th>
+                                <th>Yayınlanma Tarihi</th>
+                                <th>Beğeniler</th>
+                                <th>Yorumlar</th>
+                                <th>Kaydetmeler</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var video in videos)
+                            {
+                                <tr>
+                                    <td>@video.Title</td>
+                                    <td>@video.Author</td>
+                                    <td>@video.UploadDate.ToString("dd MMM yyyy")</td>
+                                    <td>@video.Likes</td>
+                                    <td>@video.Comments</td>
+                                    <td>@video.Saves</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-sm btn-warning" @onclick="() => EditVideo(video)">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteVideo(video.Id)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-video fa-2x"></i>
+                    <p>Hiç video bulunmamaktadır.</p>
+                </div>
+            }
+
+            @if (isAddFormVisible)
+            {
+                <div class="form-section">
+                    <div class="form-header">
+                        <h3 class="form-title"><i class="fas fa-video"></i> Yeni Video Ekle</h3>
+                        <button class="btn btn-secondary" @onclick="ToggleAddVideoForm">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="form-content">
+                        <EditForm Model="@newVideo" OnValidSubmit="HandleValidSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="mb-3">
+                                <label class="form-label">Başlık</label>
+                                <InputText class="form-control" @bind-Value="newVideo.Title" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Yazar</label>
+                                <InputText class="form-control" @bind-Value="newVideo.Author" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Açıklama</label>
+                                <InputTextArea class="form-control" @bind-Value="newVideo.Desc" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Kapak Resmi Yükle</label>
+                                <InputFile OnChange="HandleImageUpload" accept="image/*" />
+                                @if (!string.IsNullOrEmpty(newVideo.CoverImageUrl))
+                                {
+                                    <div class="image-preview">
+                                        <img src="@newVideo.CoverImageUrl" alt="Resim Önizleme" style="max-width: 100%; height: auto;" />
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Video Yükle</label>
+                                <InputFile OnChange="HandleVideoUpload" accept="video/*" />
+                                @if (!string.IsNullOrEmpty(newVideo.VideoUrl))
+                                {
+                                    <div class="video-preview">
+                                        <video controls style="max-width: 100%; height: auto;">
+                                            <source src="@newVideo.VideoUrl" type="video/mp4" />
+                                        </video>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-footer">
+                                <button type="submit" class="btn btn-success">Kaydet</button>
+                                <button type="button" class="btn btn-secondary" @onclick="ToggleAddVideoForm">İptal</button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            }
+
+            @if (isEditFormVisible)
+            {
+                <div class="form-section">
+                    <div class="form-header">
+                        <h3 class="form-title"><i class="fas fa-edit"></i> Video Düzenle</h3>
+                        <button class="btn btn-secondary" @onclick="CancelEdit">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="form-content">
+                        <EditForm Model="@editVideo" OnValidSubmit="HandleValidEditSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="mb-3">
+                                <label class="form-label">Başlık</label>
+                                <InputText class="form-control" @bind-Value="editVideo.Title" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Yazar</label>
+                                <InputText class="form-control" @bind-Value="editVideo.Author" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Açıklama</label>
+                                <InputTextArea class="form-control" @bind-Value="editVideo.Desc" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Kapak Resmi Güncelle</label>
+                                <InputFile OnChange="HandleEditImageUpload" accept="image/*" />
+                                @if (!string.IsNullOrEmpty(editVideo.CoverImageUrl))
+                                {
+                                    <div class="image-preview">
+                                        <img src="@editVideo.CoverImageUrl" alt="Resim Önizleme" style="max-width: 100%; height: auto;" />
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Video Güncelle</label>
+                                <InputFile OnChange="HandleEditVideoUpload" accept="video/*" />
+                                @if (!string.IsNullOrEmpty(editVideo.VideoUrl))
+                                {
+                                    <div class="video-preview">
+                                        <video controls style="max-width: 100%; height: auto;">
+                                            <source src="@editVideo.VideoUrl" type="video/mp4" />
+                                        </video>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-footer">
+                                <button type="submit" class="btn btn-success">Güncelle</button>
+                                <button type="button" class="btn btn-secondary" @onclick="CancelEdit">İptal</button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</LayoutComponentBase>
+
+@code {
+    private List<VideoReadDto> videos = new List<VideoReadDto>();
+    private VideoCreateDto newVideo = new VideoCreateDto();
+    private VideoReadDto editVideo = new VideoReadDto();
+    private bool isLoading = true;
+    private bool isAddFormVisible = false;
+    private bool isEditFormVisible = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadVideos();
+    }
+
+    private async Task LoadVideos()
+    {
+        isLoading = true;
+        try
+        {
+            videos = await Http.GetFromJsonAsync<List<VideoReadDto>>("api/Videos");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching videos: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void ToggleAddVideoForm()
+    {
+        isAddFormVisible = !isAddFormVisible;
+        if (isEditFormVisible)
+        {
+            isEditFormVisible = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/Videos", newVideo);
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadVideos();
+                isAddFormVisible = false;
+                newVideo = new VideoCreateDto();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating video: {ex.Message}");
+        }
+    }
+
+    private async Task HandleValidEditSubmit()
+    {
+        var response = await Http.PutAsJsonAsync($"api/Videos/{editVideo.Id}", editVideo);
+        if (response.IsSuccessStatusCode)
+        {
+            await LoadVideos();
+            isEditFormVisible = false;
+        }
+    }
+
+    private void EditVideo(VideoReadDto video)
+    {
+        editVideo = new VideoReadDto
+        {
+            Id = video.Id,
+            Title = video.Title,
+            Author = video.Author,
+            Desc = video.Desc,
+            CoverImageUrl = video.CoverImageUrl,
+            VideoUrl = video.VideoUrl
+        };
+        isEditFormVisible = true;
+        isAddFormVisible = false;
+    }
+
+    private void CancelEdit()
+    {
+        editVideo = new VideoReadDto();
+        isEditFormVisible = false;
+    }
+
+    private async Task DeleteVideo(int id)
+    {
+        bool confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Bu videoyu silmek istediğinizden emin misiniz?");
+        if (confirm)
+        {
+            var response = await Http.DeleteAsync($"api/Videos/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadVideos();
+            }
+        }
+    }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024));
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("api/Videos/upload", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<UploadResult>();
+                if (result != null)
+                {
+                    newVideo.CoverImageUrl = result.Url;
+                }
+            }
+        }
+    }
+
+    private async Task HandleVideoUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 50 * 1024 * 1024)); // Video için 50MB limit
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("api/Videos/upload", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<UploadResult>();
+                if (result != null)
+                {
+                    newVideo.VideoUrl = result.Url;
+                }
+            }
+        }
+    }
+
+    private async Task HandleEditImageUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024)); // Image için 10MB limit
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("api/Videos/upload", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<UploadResult>();
+                if (result != null)
+                {
+                    editVideo.CoverImageUrl = result.Url;
+                }
+            }
+        }
+    }
+
+    private async Task HandleEditVideoUpload(InputFileChangeEventArgs e)
+    {
+        if (e.File != null)
+        {
+            editVideo.VideoUrl = await UploadFile(e.File, "videos");
+        }
+    }
+
+    private async Task<string> UploadFile(IBrowserFile file, string folder)
+    {
+        var content = new MultipartFormDataContent();
+        var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 50 * 1024 * 1024)); // 50 MB
+        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+        content.Add(fileContent, "file", file.Name);
+
+        var response = await Http.PostAsync($"api/Videos/UploadFile/{folder}", content);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<UploadResult>();
+            return result?.Url ?? string.Empty;
+        }
+        return string.Empty;
+    }
+
+    public class UploadResult
+    {
+        public string Url { get; set; }
+    }
+}

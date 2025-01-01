@@ -1,0 +1,87 @@
+﻿@page "/video/{Id:int}"
+@using SetoClass.Models
+@using SetoClass.DTOs.Video
+@inject HttpClient Http
+
+<PageTitle>Video Detail</PageTitle>
+<link href="/css/video.css" rel="stylesheet" />
+
+<section class="single-video-detail section">
+    <div class="container">
+        @if (video == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else if (!videoExists)
+        {
+            <p><em>Video not found.</em></p>
+        }
+        else
+        {
+            <div class="video-player">
+                <!-- Video Embed veya Video Player -->
+                <video controls width="100%" height="500">
+                    <source src="@video.VideoUrl" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-info">
+                <h1 class="video-title">@video.Title</h1>
+                <div class="video-meta">
+                    <span class="video-author"><i class="fas fa-user"></i> @video.Author</span>
+                    <span class="video-date"><i class="fas fa-calendar-alt"></i> @FormatDate(video.UploadDate)</span>
+                </div>
+                <div class="video-actions">
+                    <div class="video-post-actions">
+                        <span class="action-item">
+                            <i class="fas fa-heart like-btn" aria-label="Like"></i>
+                            <span class="action-count">@video.Likes</span>
+                        </span>
+                        <span class="action-item">
+                            <i class="fas fa-save save-btn" aria-label="Save"></i>
+                            <span class="action-count">@video.Saves</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="video-description">
+                    <p>@video.Desc</p>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private VideoReadDto video;
+    private bool videoExists = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            video = await Http.GetFromJsonAsync<VideoReadDto>($"api/Videos/{Id}");
+            if (video == null)
+            {
+                videoExists = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching video details: {ex.Message}");
+            videoExists = false;
+        }
+    }
+
+    private string FormatDate(DateTime date)
+    {
+        var timeSpan = DateTime.UtcNow - date;
+        if (timeSpan.TotalMinutes < 60)
+            return $"{Math.Floor(timeSpan.TotalMinutes)} minutes ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{Math.Floor(timeSpan.TotalHours)} hours ago";
+        return $"{Math.Floor(timeSpan.TotalDays)} days ago";
+    }
+}

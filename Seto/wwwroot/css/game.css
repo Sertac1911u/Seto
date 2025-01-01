@@ -1,0 +1,359 @@
+/* game.css */
+
+/* Genel Ayarlardan Miras Almak */
+@import url('style.css');
+
+/* Single Game Detail Section */
+.game-detail {
+    padding: 100px 0 60px 0; /* Navbar yüksekliğini dikkate alarak */
+}
+
+.game-player {
+    position: relative; /* Tam ekran butonunu konumlandırmak için */
+    margin-bottom: 30px;
+}
+
+.game-player iframe {
+    border-radius: 8px;
+}
+
+/* Tam Ekran Butonu */
+.fullscreen-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: #fff;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.fullscreen-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.fullscreen-btn i {
+    font-size: 1rem;
+}
+
+/* Game Info */
+.game-info {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--background-light);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+
+.game-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.game-meta {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+}
+
+.game-meta i {
+    margin-right: 5px;
+}
+
+.game-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.game-actions span:hover{
+    color: var(--primary-color);
+    cursor: pointer;
+}
+.game-actions i {
+    font-size: 1.3rem;
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: color var(--transition-speed);
+    position: relative;
+}
+
+.game-actions i:hover {
+    color: var(--primary-color);
+}
+
+.game-actions i::after {
+    content: attr(aria-label);
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity var(--transition-speed);
+    pointer-events: none;
+}
+
+.game-actions i:hover::after {
+    opacity: 1;
+}
+
+.game-description {
+    line-height: 1.6;
+    color: var(--text-dark);
+    transition: color var(--transition-speed);
+}
+
+
+
+.game-description h2,
+.game-description h3 {
+    color: var(--primary-color);
+    margin-top: 20px;
+}
+
+.game-description h2 {
+    font-size: 1.75rem;
+}
+
+.game-description h3 {
+    font-size: 1.25rem;
+}
+
+.game-description p {
+    margin: 15px 0;
+}
+
+.game-description ul {
+    list-style: disc inside;
+    margin-left: 20px;
+}
+
+/* Comments Section */
+.comments-section {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: var(--background-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+
+
+.comments-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.comment {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    padding-bottom: 15px;
+}
+
+.comment-divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin-top: 15px;
+}
+
+.comment.reply {
+    margin-left: 40px;
+    margin-top: 20px; 
+}
+
+.comment-author img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.author-name {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.comment-date {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+}
+
+.comment-content p {
+    margin: 0 0 10px 0;
+    color: var(--text-dark);
+}
+
+
+.reply-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.reply-btn i {
+    font-size: 1rem;
+}
+
+.reply-form {
+    margin-top: 30px;
+}
+
+.reply-form .comment-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--background-light);
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color var(--transition-speed);
+}
+
+
+
+.comment-author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.reply-form textarea {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    transition: border-color var(--transition-speed), background-color var(--transition-speed), color var(--transition-speed);
+}
+
+
+
+.reply-form textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.comment-form .btn.submit-btn {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.comment-form .btn.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Leave a Comment Form */
+.leave-comment {
+    margin-top: 30px;
+}
+
+.leave-comment h3 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.leave-comment .comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: var(--background-light);
+    padding: 15px;
+    border-radius: 8px;
+    transition: background-color var(--transition-speed);
+}
+
+.input-container {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.leave-comment .comment-form .comment-author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.leave-comment .comment-form textarea {
+    flex: 1;
+    min-height: 100px;
+    font-family: 'Poppins', sans-serif;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    transition: border-color var(--transition-speed), 
+                background-color var(--transition-speed), 
+                color var(--transition-speed);
+}
+
+
+
+.leave-comment .comment-form textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.leave-comment .comment-form .btn.submit-btn {
+    align-self: flex-end;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.leave-comment .comment-form .btn.submit-btn:hover {
+    background-color: #0056b3;
+}
+

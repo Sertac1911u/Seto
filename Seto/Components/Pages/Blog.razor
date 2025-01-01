@@ -1,0 +1,86 @@
+﻿@page "/blog/{Id:int}"
+@using SetoClass.DTOs.Blog
+
+@inject HttpClient Http
+
+<PageTitle>Blog Detail</PageTitle>
+<link href="/css/blog.css" rel="stylesheet" />
+
+<section class="single-blog-detail section">
+    <div class="container">
+        @if (blog == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else if (!blogExists)
+        {
+            <p><em>Blog not found.</em></p>
+        }
+        else
+        {
+            <article class="blog-post-article">
+                <div class="blog-post-header">
+                    <h1 class="blog-post-title">@blog.Title</h1>
+                    <div class="blog-post-meta">
+                        <span class="blog-author"><i class="fas fa-user"></i> @blog.Author</span>
+                        <span class="blog-date"><i class="fas fa-calendar-alt"></i> @FormatDate(blog.Date)</span>
+                        <span class="blog-views"><i class="fas fa-eye"></i> @blog.Views Views</span>
+                        <span class="blog-likes"><i class="fas fa-heart"></i> @blog.Likes</span>
+                        <span class="blog-saves"><i class="fas fa-bookmark"></i> @blog.Saves</span>
+                    </div>
+                    <div class="blog-post-image">
+                        <img src="@blog.ImageUrl" alt="@blog.Title">
+                    </div>
+                </div>
+                <div class="blog-post-content">
+                    @((MarkupString)blog.Content)
+                </div>
+                <div class="blog-post-actions">
+                    <span class="action-item">
+                        <i class="fas fa-heart like-btn" aria-label="Like"></i>
+                        <span class="action-count">@blog.Likes</span>
+                    </span>
+                    <span class="action-item">
+                        <i class="fas fa-save save-btn" aria-label="Save"></i>
+                        <span class="action-count">@blog.Saves</span>
+                    </span>
+                </div>
+            </article>
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private BlogReadDto blog;
+    private bool blogExists = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            blog = await Http.GetFromJsonAsync<BlogReadDto>($"https://localhost:7278/api/Blogs/{Id}");
+            if (blog == null)
+            {
+                blogExists = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching blog details: {ex.Message}");
+            blogExists = false;
+        }
+    }
+
+    private string FormatDate(DateTime date)
+    {
+        var timeSpan = DateTime.UtcNow - date;
+        if (timeSpan.TotalMinutes < 60)
+            return $"{Math.Floor(timeSpan.TotalMinutes)} minutes ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{Math.Floor(timeSpan.TotalHours)} hours ago";
+        return $"{Math.Floor(timeSpan.TotalDays)} days ago";
+    }
+}

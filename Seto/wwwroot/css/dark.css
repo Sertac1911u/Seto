@@ -1,0 +1,356 @@
+/* Dark Mode Stilleri */
+
+/* Genel Body Ayarları */
+body.dark-mode {
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* Navbar */
+body.dark-mode .navbar {
+    background-color: #1f1f1f;
+    transition: background-color var(--transition-speed);
+}
+
+/* Popup */
+body.dark-mode .popup {
+    background-color: #1f1f1f;
+    color: var(--text-light);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* Form Inputs and Textareas */
+body.dark-mode .form-group input, 
+body.dark-mode .form-group textarea {
+    background-color: #333;
+    border-color: #555;
+    color: #fff;
+    transition: background-color var(--transition-speed), border-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* Large Blog Item */
+body.dark-mode .blog-title a
+{
+    color: var(--text-light);
+}
+body.dark-mode .video-title a
+{
+    color: var(--text-light);
+}
+body.dark-mode .large-blog {
+    background-color: #1f1f1f;
+    border-color: #333;
+    transition: background-color var(--transition-speed), border-color var(--transition-speed);
+}
+
+/* Small Blog Items */
+body.dark-mode .small-blog {
+    background-color: #1f1f1f;
+    border-color: #333;
+    transition: background-color var(--transition-speed), border-color var(--transition-speed);
+}
+
+/* Footer */
+body.dark-mode .footer {
+    background-color: #1f1f1f;
+    color: #fff;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* Footer Links and Social Icons */
+body.dark-mode .footer-links a,
+body.dark-mode .footer-social a {
+    color: #fff;
+    transition: color var(--transition-speed);
+}
+
+body.dark-mode .footer-links a:hover,
+body.dark-mode .footer-social a:hover {
+    color: var(--primary-color);
+    transition: color var(--transition-speed);
+}
+
+/* Video Description and Game Content */
+body.dark-mode .video-description, 
+body.dark-mode .video-content,
+body.dark-mode .game-content {
+    background-color: #1f1f1f;
+    color: #fff;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* Comment Content */
+body.dark-mode .comment-content p {
+    background-color: var(--background-dark);
+    color: #fff;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+body.dark-mode .comment-content p::before {
+    border-color: transparent #333 transparent transparent;
+}
+
+/* Scroll Buttons */
+body.dark-mode .scroll-btn {
+    background: rgba(40,40,40,0.9);
+    border-color: #444;
+    transition: background var(--transition-speed), border-color var(--transition-speed);
+}
+body.dark-mode .scroll-to-top
+{
+    background-color: var(--background-dark);
+}
+body.dark-mode .scroll-btn i {
+    color: #fff;
+    transition: color var(--transition-speed);
+}
+
+/* Toggle Password Icon (Optional Improvement) */
+body.dark-mode .form-group .toggle-password {
+    color: #ccc;
+    transition: color var(--transition-speed);
+}
+
+/* Additional Transitions for Smoothness */
+body.dark-mode .toggle-password,
+body.dark-mode .scroll-btn:hover,
+body.dark-mode .scroll-btn.left:hover,
+body.dark-mode .scroll-btn.right:hover {
+    transition: color var(--transition-speed), background-color var(--transition-speed);
+}
+/* Blogs Page dark Mode */
+body.dark-mode .blog-post-title
+{
+    color: var(--text-light);
+}
+body.dark-mode .blog-post-content h2,
+body.dark-mode .blog-post-content h3
+{
+    color: var(--text-light);
+}
+body.dark-mode .blogs-page {
+    background-color: #121212;
+}
+body.dark-mode .blog-list-desc
+{
+    color: var(--background-page);
+}
+body.dark-mode .section-title
+{
+    color: var(--text-light);
+}
+body.dark-mode .blog-list-title a
+{
+    color: var(--text-light);
+}
+body.dark-mode .blog-list-actions i
+{
+    color: var(--background-page);
+}
+/* Videos Dark Mode Support */
+body.dark-mode .videos-page {
+    background-color: #121212;
+}
+
+body.dark-mode .section-title {
+    color: var(--text-light);
+}
+
+body.dark-mode .video-list-item {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+}
+
+body.dark-mode .video-content .video-title a {
+    color: var(--text-light);
+}
+
+body.dark-mode .video-meta {
+    color: #ccc;
+}
+
+body.dark-mode .video-stats {
+    color: #ccc;
+}
+
+body.dark-mode .video-stats i {
+    color: var(--text-light);
+}
+/* Games Dark Mode Support */
+body.dark-mode .games-section {
+    background-color: var(--background-dark);
+}
+
+body.dark-mode .section-title {
+    color: var(--text-light);
+}
+
+body.dark-mode .game-item {
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+}
+
+body.dark-mode .game-content .game-title a {
+    color: var(--text-light);
+}
+
+body.dark-mode .game-hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode .game-content {
+    color: #ccc;
+}
+
+body.dark-mode .game-content .game-title a:hover {
+    color: #1e90ff;
+}
+/* Resume Dark Mode Support */
+body.dark-mode .resume-page {
+    background-color: #121212;
+}
+
+body.dark-mode .contact-info .name,
+body.dark-mode .contact-info .profession,
+body.dark-mode .resume-section h3,
+body.dark-mode .education-item h4,
+body.dark-mode .experience-item h4,
+body.dark-mode .certification-item h4 {
+    color: var(--text-light);
+}
+
+body.dark-mode .contact-details p,
+body.dark-mode .contact-details i,
+body.dark-mode .education-details,
+body.dark-mode .experience-details,
+body.dark-mode .certification-details,
+body.dark-mode .education-description,
+body.dark-mode .experience-description {
+    color: #ccc;
+}
+
+body.dark-mode .skill-item {
+    background-color: #333;
+}
+
+body.dark-mode .skill-item span {
+    color: #fff;
+}
+/* Singleblog dark mode */
+body.dark-mode .blog-post-article {
+    background-color: var(--background-dark);
+    box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+}
+body.dark-mode .blog-post-content {
+    color: var(--text-light);
+}
+body.dark-mode .blog-post-actions {
+    background-color: var(--background-dark);
+    border-color: var(--text-light);
+}body.dark-mode .comments-section {
+    background-color: var(--background-dark);
+    box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+}
+body.dark-mode .comments-section h2 
+{
+ color: var(--text-light);
+}
+body.dark-mode .comments-section .author-name {
+color: var(--text-light);
+}
+body.dark-mode .comments-section .reply-btn {
+    color: var(--text-light);
+}
+body.dark-mode .comment-content p {
+    color: var(--text-light);
+    background-color: var(--background-dark);
+}
+body.dark-mode .reply-form .comment-form {
+    background-color: var(--background-dark);
+}
+body.dark-mode .reply-form textarea {
+    background-color: var(--background-dark);
+    border-color: var(--background-dark);
+    color: var(--text-light);
+}
+body.dark-mode .leave-comment .comment-form {
+    background-color: var(--background-dark);
+}
+
+body.dark-mode .leave-comment .comment-form textarea {
+    background-color: var(--background-dark);
+    border-color: var(--text-light);
+    color: #fff;
+}
+/* Single Video Page Dark */
+body.dark-mode .reply-form .comment-form {
+    background-color: var(--background-dark);
+}
+body.dark-mode .reply-form textarea {
+    background-color: var(--background-dark);
+    border-color: var(--text-light);
+    color: var(--text-light);
+}
+body.dark-mode .leave-comment .comment-form {
+    background-color: var(--background-dark);
+}
+
+body.dark-mode .leave-comment .comment-form textarea {
+    background-color: var(--background-dark);
+    border-color: var(--text-light);
+    color: var(--text-light);
+}
+body.dark-mode .video-info {
+    background-color: var(--background-dark);
+    box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+}
+body.dark-mode .video-description {
+    color: var(--text-light);
+}
+body.dark-mode .comments-section {
+    background-color: var(--background-dark);
+    box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+}body.dark-mode .comment-content p {
+    color: var(--text-light);
+}
+/* Single game dark mode  */
+body.dark-mode .game-info {
+    background-color: var(--background-dark);
+    box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+}
+body.dark-mode .game-description {
+    color: var(--text-light);
+}
+body.dark-mode .comments-section {
+    background-color: var(--background-dark);
+    box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+}
+body.dark-mode .comment-content p {
+    color: var(--text-light);
+}
+body.dark-mode .reply-form .comment-form {
+    background-color: var(--background-dark);
+}
+body.dark-mode .reply-form textarea {
+    background-color:var(--background-dark);
+    border-color: var(--text-light);
+    color: var(--text-light);
+}
+body.dark-mode .leave-comment .comment-form {
+    background-color: var(--background-dark);
+}
+
+body.dark-mode .leave-comment .comment-form textarea {
+    background-color: var(--background-dark);
+    border-color: var(--text-light);
+    color: var(--text-light);
+}
+body.dark-mode .game-title 
+{
+    color: var(--text-light);
+}
+body.dark-mode h2
+{
+    color: var(--text-light);
+}

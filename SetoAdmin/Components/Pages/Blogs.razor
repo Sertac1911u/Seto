@@ -1,0 +1,374 @@
+﻿@page "/blogs"
+@rendermode InteractiveServer
+
+@using SetoClass.DTOs.Blog
+@using SetoClass.Models
+
+@using AutoMapper
+
+@inject IMapper Mapper
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<LayoutComponentBase>
+
+    <div class="admin-container">
+        <div class="header-section">
+            <h2 class="page-title">Blog Yönetimi</h2>
+            <button class="add-blog-btn btn btn-primary" @onclick="ToggleAddBlogForm">
+                <i class="fas fa-plus"></i>
+                Yeni Blog Ekle
+            </button>
+        </div>
+
+        @if (isLoading)
+        {
+            <div class="loading-spinner">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Yükleniyor...</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            @if (blogs.Any())
+            {
+                <div class="table-responsive">
+                    <table class="custom-table table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Başlık</th>
+                                <th>Yazar</th>
+                                <th>Yayınlanma Tarihi</th>
+                                <th>Beğeniler</th>
+                                <th>Yorumlar</th>
+                                <th>Kaydetmeler</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var blog in blogs)
+                            {
+                                <tr>
+                                    <td>@blog.Title</td>
+                                    <td>@blog.Author</td>
+                                    <td>@blog.Date.ToString("dd MMM yyyy")</td>
+                                    <td>@blog.Likes</td>
+                                    <td>@blog.Comments</td>
+                                    <td>@blog.Saves</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-sm btn-warning" @onclick="() => EditBlog(blog)">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteBlog(blog.Id)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-file-alt fa-2x"></i>
+                    <p>Hiç blog bulunmamaktadır.</p>
+                </div>
+            }
+
+            @if (isAddFormVisible)
+            {
+                <div class="form-section">
+                    <div class="form-header">
+                        <h3 class="form-title"><i class="fas fa-blog"></i> Yeni Blog Ekle</h3>
+                        <button class="btn btn-secondary" @onclick="ToggleAddBlogForm">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="form-content">
+                        <EditForm Model="@newBlog" OnValidSubmit="HandleValidSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="mb-3">
+                                <label class="form-label">Başlık</label>
+                                <InputText class="form-control" @bind-Value="newBlog.Title" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Yazar</label>
+                                <InputText class="form-control" @bind-Value="newBlog.Author" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">İçerik</label>
+                                <RadzenHtmlEditor @bind-Value="newBlog.Content" Style="height: 300px;" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Resim Yükle</label>
+                                <InputFile OnChange="HandleImageUpload" accept="image/*" />
+                                @if (!string.IsNullOrEmpty(newBlog.ImageUrl))
+                                {
+                                    <div class="image-preview">
+                                        <img src="@newBlog.ImageUrl" alt="Resim Önizleme" style="max-width: 100%; height: auto;" />
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-footer">
+                                <button type="submit" class="btn btn-success">Kaydet</button>
+                                <button type="button" class="btn btn-secondary" @onclick="ToggleAddBlogForm">İptal</button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            }
+
+            @if (isEditFormVisible)
+            {
+                <div class="form-section">
+                    <div class="form-header">
+                        <h3 class="form-title"><i class="fas fa-edit"></i> Blog Düzenle</h3>
+                        <button class="btn btn-secondary" @onclick="CancelEdit">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="form-content">
+                        <EditForm Model="@editBlog" OnValidSubmit="HandleValidEditSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="mb-3">
+                                <label class="form-label">Başlık</label>
+                                <InputText class="form-control" @bind-Value="editBlog.Title" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Yazar</label>
+                                <InputText class="form-control" @bind-Value="editBlog.Author" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">İçerik</label>
+                                <RadzenHtmlEditor @bind-Value="editBlog.Content" Style="height: 300px;" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Resim Yükle</label>
+                                <InputFile OnChange="HandleEditImageUpload" accept="image/*" />
+                                @if (!string.IsNullOrEmpty(editBlog.ImageUrl))
+                                {
+                                    <div class="image-preview">
+                                        <img src="@editBlog.ImageUrl" alt="Resim Önizleme" style="max-width: 100%; height: auto;" />
+                                    </div>
+                                }
+                            </div>
+
+
+                            <div class="form-footer">
+                                <button type="submit" class="btn btn-success">Güncelle</button>
+                                <button type="button" class="btn btn-secondary" @onclick="CancelEdit">İptal</button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+</LayoutComponentBase>
+
+@code {
+    private List<BlogReadDto> blogs = new List<BlogReadDto>();
+    private BlogCreateDto newBlog = new BlogCreateDto();
+    private BlogReadDto editBlog = new BlogReadDto();
+    private bool isLoading = true;
+    private bool isAddFormVisible = false;
+    private bool isEditFormVisible = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBlogs();
+    }
+
+    private async Task LoadBlogs()
+    {
+        isLoading = true;
+        try
+        {
+            blogs = await Http.GetFromJsonAsync<List<BlogReadDto>>("api/Blogs");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching blogs: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void ToggleAddBlogForm()
+    {
+        isAddFormVisible = !isAddFormVisible;
+        if (isEditFormVisible)
+        {
+            isEditFormVisible = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            // Yeni blog gönderimi
+            var response = await Http.PostAsJsonAsync("api/Blogs", newBlog);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Blog listesi güncelle
+                await LoadBlogs();
+                isAddFormVisible = false;
+
+                // Blog modelini sıfırla
+                newBlog = new BlogCreateDto();
+            }
+            else
+            {
+                Console.WriteLine($"Error creating blog: {response.ReasonPhrase}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception creating blog: {ex.Message}");
+        }
+    }
+
+
+    private async Task HandleValidEditSubmit()
+    {
+        var response = await Http.PutAsJsonAsync($"api/Blogs/{editBlog.Id}", editBlog);
+        if (response.IsSuccessStatusCode)
+        {
+            await LoadBlogs();
+            isEditFormVisible = false;
+        }
+    }
+
+    private void EditBlog(BlogReadDto blog)
+    {
+        editBlog = new BlogReadDto
+        {
+            Id = blog.Id,
+            Title = blog.Title,
+            Author = blog.Author,
+            Content = blog.Content,
+            ImageUrl = blog.ImageUrl
+        };
+        isEditFormVisible = true;
+        if (isAddFormVisible)
+        {
+            isAddFormVisible = false;
+        }
+    }
+
+    private void CancelEdit()
+    {
+        editBlog = new BlogReadDto();
+        isEditFormVisible = false;
+    }
+
+    private async Task DeleteBlog(int id)
+    {
+        bool confirm = await JSRuntime.InvokeAsync<bool>("confirm", $"Bu blogu silmek istediğinizden emin misiniz?");
+        if (confirm)
+        {
+            var response = await Http.DeleteAsync($"api/Blogs/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadBlogs();
+            }
+        }
+    }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            // Resim yükle
+            var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024)); // 10 MB
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("api/Blogs/upload", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                if (result != null)
+                {
+                    // Blog modeline URL'yi ata
+                    newBlog.ImageUrl = result.Url;
+                }
+            }
+        }
+    }
+
+    public class ImageUploadResult
+    {
+        public string Url { get; set; }
+    }
+
+
+    private async Task HandleEditImageUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            // Resim yükleme işlemi
+            var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024)); // 10 MB limit
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("api/Blogs/upload", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                if (result != null)
+                {
+                    // Doğru modele atama yapılıyor
+                    editBlog.ImageUrl = result.Url;
+                }
+            }
+        }
+    }
+
+
+    private async Task<string> UploadImage(IBrowserFile file)
+    {
+        var content = new MultipartFormDataContent();
+        var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024));
+        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+        content.Add(fileContent, "file", file.Name);
+
+        var response = await Http.PostAsync("api/Blogs/UploadImage", content);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+            return result.Url;
+        }
+
+        return string.Empty;
+    }
+
+
+}

@@ -1,0 +1,145 @@
+﻿@page "/resume"
+@using SetoClass.DTOs.Resume
+
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Resume</PageTitle>
+<link href="/css/resume.css" rel="stylesheet" />
+
+<div class="resume-page">
+    <section class="resume-section section">
+        <div class="container">
+            <h2 class="section-title">Resume</h2>
+
+            @if (resume == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                <div class="resume-container">
+                    <!-- Profile Picture and Contact Info -->
+                    <div class="resume-header">
+                        <div class="profile-pic">
+                            <img src="@resume.ResumeImage" alt="Profile Picture">
+                        </div>
+                        <div class="contact-info">
+                            <h1 class="name">@resume.FullName</h1>
+                            <p class="profession">@resume.Profession</p>
+                            <div class="contact-details">
+                                <p><i class="fas fa-envelope"></i> @resume.Email</p>
+                                <p><i class="fas fa-phone"></i> @resume.PhoneNumber</p>
+                                <div class="social-media">
+                                    @foreach (var social in resume.Socials)
+                                    {
+                                        <a href="@social.Url" aria-label="@social.Platform" target="_blank">
+                                            <i class="@GetSocialIcon(social.Platform)"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="resume-section education">
+                        <h3>Education</h3>
+                        <div class="education-item">
+                            @HtmlParser(resume.Education)
+                        </div>
+                    </div>
+
+                    <!-- Experience -->
+                    <div class="resume-section experience">
+                        <h3>Experience</h3>
+                        <div class="experience-item">
+                            @HtmlParser(resume.Experience)
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="resume-section skills">
+                        <h3>Skills</h3>
+                        <div class="skills-list">
+                            @foreach (var skill in resume.Skills)
+                            {
+                                <div class="skill-item">
+                                    <i class="@skill.SkillIcon"></i>
+                                    <span>@skill.SkillName</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Certifications -->
+                    <div class="resume-section certifications">
+                        <h3>Certifications</h3>
+                        <div class="certification-item">
+                            @HtmlParser(resume.Certification)
+                        </div>
+                    </div>
+
+                    <!-- Download Resume Button -->
+                    <div class="resume-download">
+                        <a href="@resume.CvUrl" class="btn download-btn" target="_blank">
+                            <i class="fas fa-download"></i> Download Resume
+                        </a>
+                    </div>
+
+                    <!-- Tam Ekran Butonu -->
+                    <div class="fullscreen-button">
+                        <button class="btn fullscreen-btn" @onclick="ToggleFullscreenAsync" aria-label="Toggle Fullscreen">
+                            <i class="fas fa-expand"></i> Fullscreen
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</div>
+
+@code {
+    private ResumeReadDto resume;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Tek bir özgeçmiş olduğu için sabit bir endpoint kullanıyoruz
+            resume = await Http.GetFromJsonAsync<ResumeReadDto>("api/Resume");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching resume: {ex.Message}");
+            // Hata durumunda gerekli işlemleri yapabilirsiniz
+        }
+    }
+
+    /// <summary>
+    /// Platform adına göre Font Awesome ikon sınıfını döner
+    /// </summary>
+    /// <param name="platform"></param>
+    /// <returns></returns>
+    private string GetSocialIcon(string platform)
+    {
+        return platform.ToLower() switch
+        {
+            "linkedin" => "fab fa-linkedin",
+            "github" => "fab fa-github",
+            "twitter" => "fab fa-twitter",
+            "facebook" => "fab fa-facebook",
+            _ => "fas fa-globe"
+        };
+    }
+
+    private MarkupString HtmlParser(string htmlContent)
+    {
+        return new MarkupString(htmlContent);
+    }
+
+    private async Task ToggleFullscreenAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("toggleFullscreen");
+    }
+}

@@ -1,0 +1,93 @@
+﻿@page "/blogs"
+@using SetoClass.DTOs.Blog
+@using SetoClass.Models;
+@inject HttpClient Http
+
+<PageTitle>Blogs</PageTitle>
+<link href="/css/blogs.css" rel="stylesheet" />
+
+<div class="blogs-page">
+    <section class="all-blogs section">
+        <div class="container">
+            <h2 class="section-title">All Blogs</h2>
+
+            @if (blogs == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else if (blogs.Count == 0)
+            {
+                <p><em>No blogs available.</em></p>
+            }
+            else
+            {
+                <div class="blog-list">
+                    @foreach (var blog in blogs)
+                    {
+                        <article class="blog-list-item">
+                            <div class="blog-list-img">
+                                <a href="@($"/blog/{blog.Id}")">
+                                    <img src="@blog.ImageUrl" alt="@blog.Title" style="width: 150px; height: auto;" />
+                                </a>
+                            </div>
+                            <div class="blog-list-content">
+                                <h3 class="blog-list-title">
+                                    <a href="@($"/blog/{blog.Id}")">@blog.Title</a>
+                                </h3>
+                                <p class="blog-list-meta">
+                                    by <span class="blog-author"><a href="">@blog.Author</a></span> - @FormatDate(blog.Date)
+                                </p>
+                                <p class="blog-list-desc">
+                                    @((MarkupString)TruncateContent(blog.Content, 150))
+                                </p>
+                                <div class="blog-list-actions">
+                                    <span><i class="fas fa-heart"></i> @blog.Likes</span>
+                                    <span class="blog-saves"><i class="fas fa-bookmark"></i> @blog.Saves</span>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        </div>
+    </section>
+</div>
+
+@code {
+    private List<BlogReadDto> blogs;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            blogs = await Http.GetFromJsonAsync<List<BlogReadDto>>("https://localhost:7278/api/Blogs");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching blogs: {ex.Message}");
+            blogs = new List<BlogReadDto>();
+        }
+    }
+
+    private string FormatDate(DateTime date)
+    {
+        // Örneğin, tarih formatını "2 hours ago" gibi yapabilirsiniz.
+        var timeSpan = DateTime.UtcNow - date;
+        if (timeSpan.TotalMinutes < 60)
+            return $"{Math.Floor(timeSpan.TotalMinutes)} minutes ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{Math.Floor(timeSpan.TotalHours)} hours ago";
+        return $"{Math.Floor(timeSpan.TotalDays)} days ago";
+    }
+
+    private string TruncateContent(string content, int maxLength)
+    {
+        if (string.IsNullOrEmpty(content))
+            return string.Empty;
+
+        if (content.Length <= maxLength)
+            return content;
+
+        return content.Substring(0, maxLength) + "...";
+    }
+}

@@ -1,0 +1,69 @@
+﻿@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+@using System.Net.Http.Json
+@using SetoClass.DTOs.Resume
+
+
+<div class="footer-social">
+    @if (resume?.Socials != null && resume.Socials.Any())
+    {
+        @foreach (var social in resume.Socials)
+        {
+            <a href="@social.Url" aria-label="@social.Platform" target="_blank">
+                <i class="@GetSocialIcon(social.Platform)"></i>
+            </a>
+        }
+    }
+    else
+    {
+        <p><em>No social media links available</em></p>
+    }
+</div>
+<style>
+
+</style>
+@code {
+    private ResumeReadDto resume;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Tek bir özgeçmiş olduğu için sabit bir endpoint kullanıyoruz
+            resume = await Http.GetFromJsonAsync<ResumeReadDto>("api/Resume");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching resume: {ex.Message}");
+            // Hata durumunda gerekli işlemleri yapabilirsiniz
+        }
+    }
+
+    /// <summary>
+    /// Platform adına göre Font Awesome ikon sınıfını döner
+    /// </summary>
+    /// <param name="platform"></param>
+    /// <returns></returns>
+    private string GetSocialIcon(string platform)
+    {
+        return platform.ToLower() switch
+        {
+            "linkedin" => "fab fa-linkedin",
+            "github" => "fab fa-github",
+            "twitter" => "fab fa-twitter",
+            "facebook" => "fab fa-facebook",
+            _ => "fas fa-globe"
+        };
+    }
+
+
+    private MarkupString HtmlParser(string htmlContent)
+    {
+        return new MarkupString(htmlContent);
+    }
+
+    private async Task ToggleFullscreenAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("toggleFullscreen");
+    }
+}

@@ -1,8 +1,11 @@
 using AngleSharp.Dom;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SetoApi.Data;
 using SetoApi.MappingProfiles;
 using SetoClass.Settings;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +34,19 @@ builder.Services.AddCors(options =>
 builder.Services.Configure<FileSettings>(builder.Configuration.GetSection("FileSettings"));
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"]
+        };
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

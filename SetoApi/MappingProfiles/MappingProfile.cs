@@ -5,6 +5,7 @@ using SetoClass.DTOs.Resume;
 using SetoClass.DTOs.ResumeSkill;
 using SetoClass.DTOs.ResumeSocial;
 using SetoClass.DTOs.Settings;
+using SetoClass.DTOs.User;
 using SetoClass.DTOs.Video;
 using SetoClass.Models;
 
@@ -50,6 +51,11 @@ namespace SetoApi.MappingProfiles
             CreateMap<Video, VideoReadDto>();
             CreateMap<VideoCreateDto, Video>();
             CreateMap<VideoUpdateDto, Video>();
+
+
+            CreateMap<User, UserReadDto>();
+            CreateMap<UserCreateDto, User>();
+
 
         }
 

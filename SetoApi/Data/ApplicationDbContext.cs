@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using SetoClass.Models;
 
 namespace SetoApi.Data
@@ -19,6 +20,7 @@ namespace SetoApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             // Identity tablo yapılarını da oluşturmamız için bu satır önemli
             base.OnModelCreating(modelBuilder);
 

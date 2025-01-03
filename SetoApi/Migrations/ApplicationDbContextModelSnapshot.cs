@@ -270,6 +270,54 @@ namespace SetoApi.Migrations
                     b.ToTable("Settings");
                 });
 
+            modelBuilder.Entity("SetoClass.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 1, 3, 16, 49, 13, 496, DateTimeKind.Utc).AddTicks(6853),
+                            Email = "superadmin@superadmin.com",
+                            PasswordHash = "$2a$11$JqJ9roZhgzGThJPhVpCdguv1QZKoCsUBYOLPoHOX7DvyX61QM1AOW",
+                            Role = 0,
+                            Username = "SuperAdmin"
+                        });
+                });
+
             modelBuilder.Entity("SetoClass.Models.Video", b =>
                 {
                     b.Property<int>("Id")

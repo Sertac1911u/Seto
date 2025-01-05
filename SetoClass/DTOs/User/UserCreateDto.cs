@@ -18,7 +18,6 @@ namespace SetoClass.DTOs.User
         [MinLength(6)]
         public string Password { get; set; }
 
-        [Required]
-        public UserRole Role { get; set; }
+        
     }
 }

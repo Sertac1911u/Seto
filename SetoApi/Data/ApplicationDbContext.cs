@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SetoClass.Models;
 
 namespace SetoApi.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
@@ -20,18 +20,14 @@ namespace SetoApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            // Identity tablo yapılarını da oluşturmamız için bu satır önemli
             base.OnModelCreating(modelBuilder);
 
-            // Resume -> ResumeSkill (1:N)
             modelBuilder.Entity<ResumeSkill>()
                 .HasOne(rs => rs.Resume)
                 .WithMany(r => r.Skills)
                 .HasForeignKey(rs => rs.ResumeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Resume -> ResumeSocial (1:N)
             modelBuilder.Entity<ResumeSocial>()
                 .HasOne(rs => rs.Resume)
                 .WithMany(r => r.Socials)

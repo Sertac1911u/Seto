@@ -53,8 +53,7 @@ namespace SetoApi.MappingProfiles
             CreateMap<VideoUpdateDto, Video>();
 
 
-            CreateMap<User, UserReadDto>();
-            CreateMap<UserCreateDto, User>();
+   
 
 
         }

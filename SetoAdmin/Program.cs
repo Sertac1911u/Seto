@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Radzen;
 using SetoAdmin.Components;
 using SetoApi.Data;
 using SetoApi.MappingProfiles;
+using SetoAdmin.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,13 +18,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<SetoAdmin.Services.AuthenticationService>();
 
 builder.Services.AddScoped(sp => new HttpClient
 {
     BaseAddress = new Uri("https://localhost:7278/")
 });
 // b) İsimlendirilmiş HttpClient -> "SetosApi"
-builder.Services.AddHttpClient("SetosApi", client =>
+builder.Services.AddHttpClient<SetoAdmin.Services.AuthenticationService>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7278/");
 });
